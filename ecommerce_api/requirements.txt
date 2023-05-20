@@ -1,0 +1,9 @@
+Django==4.2.1
+
+# database
+psycopg2-binary==2.9.6
+
+djangorestframework==3.14.0
+django-filter==23.2
+
+requests==2.30.0
