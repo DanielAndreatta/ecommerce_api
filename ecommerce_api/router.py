@@ -1,25 +1,20 @@
-"""from django.urls import path
+from django.urls import path
 from rest_framework import routers
-#from apps.persona import api as api_persona
-#from apps.persona.api import EstadoSaludListCreateView
-#from apps.programa import api as api_programa
-
-
-# Initializar el router de DRF solo una vez
-#from apps.programa.api import AsignacionBeneficioListCreateView
+from apps.producto import api as api_producto
+from apps.orden import api as api_orden
 
 router = routers.DefaultRouter()
 
 # Registrar los ViewSet
-#router.register('persona', api_persona.PersonaViewSet)
-#router.register('estado-salud', api_persona.EstadoSaludViewSet)
-#router.register('programa', api_programa.ProgramaViewSet)
-#router.register('asignacion-beneficio', api_programa.AsignacionBeneficioViewSet)
+router.register('producto', api_producto.ProductoViewSet)
+router.register('orden', api_orden.OrdenViewSet)
+router.register('detalle_orden', api_orden.DetalleOrdenViewSet)
 
 
-urlpatterns = [
-    #path('persona/<uuid:uuid>/estado-salud/', EstadoSaludListCreateView.as_view()),
-    #path('programa/<int:pk>/asignacion-beneficio/', AsignacionBeneficioListCreateView.as_view()),
-]
 
-urlpatterns += router.urls"""
+"""urlpatterns = [
+    path('persona/<uuid:uuid>/estado-salud/', EstadoSaludListCreateView.as_view()),
+    path('programa/<int:pk>/asignacion-beneficio/', AsignacionBeneficioListCreateView.as_view()),
+]"""
+
+urlpatterns = router.urls

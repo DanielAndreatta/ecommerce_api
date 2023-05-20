@@ -5,3 +5,4 @@ db.sqlite3
 .idea/
 media/
 venv/
+ecommerce_api/configuraciones_locales.py
