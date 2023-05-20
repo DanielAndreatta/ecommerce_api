@@ -4,6 +4,7 @@ Caso de Estudio: Aplicación E-commerce
 
 Crear una API REST utilizando DJANGO REST FRAMEWORK, que brinde la siguiente funcionalidad básica y acotada de un E-commerce.
 
+
 1. El sistema debe tener los modelos Producto, Orden, DetalleOrden con los siguientes atributos:
 
 Producto:
