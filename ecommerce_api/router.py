@@ -1,4 +1,4 @@
-from django.urls import path
+"""from django.urls import path
 from rest_framework import routers
 #from apps.persona import api as api_persona
 #from apps.persona.api import EstadoSaludListCreateView
@@ -22,4 +22,4 @@ urlpatterns = [
     #path('programa/<int:pk>/asignacion-beneficio/', AsignacionBeneficioListCreateView.as_view()),
 ]
 
-urlpatterns += router.urls
+urlpatterns += router.urls"""
