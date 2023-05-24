@@ -8,7 +8,7 @@ import requests
 class DetalleOrdenSerializer(ModelSerializer):
     class Meta:
         model = DetalleOrden
-        fields = ['id','orden', 'cantidad', 'producto']
+        fields = ['id','orden', 'cantidad', 'producto','precio_unitario']
 
 
     #Inciso 4) validar que exista una cantidad del stock del producto
@@ -31,15 +31,21 @@ class DetalleOrdenSerializer(ModelSerializer):
         orden = datos['orden']
         cantidad = datos['cantidad']
         producto = datos['producto']
+        precio_unitario = producto.precio
 
         # Actualizar el stock del producto
         producto.stock -= cantidad
         producto.save()
 
         # Crear el detalle de orden
-        detalle_orden = DetalleOrden.objects.create(orden=orden, cantidad=cantidad, producto=producto)
+        detalle_orden = DetalleOrden.objects.create(
+            orden=orden,
+            cantidad=cantidad,
+            producto=producto,
+            precio_unitario=precio_unitario
+        )
 
-        return detalle_orden
+        return detalle_orden 
 
 
 
