@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'apps.producto',
     'apps.orden',
+    'apps.core',
 
 ]
 
@@ -79,6 +81,8 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
     'rest_framework.renderers.JSONRenderer',
     'rest_framework.renderers.BrowsableAPIRenderer'],
+
+
 }
 
 # Database
