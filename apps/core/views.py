@@ -8,4 +8,4 @@ def users(request):
 
     # convertir los datos de repuesta en formato json
     usuarios = response.json()
-    return render(request, "core/usuarios.html", {'usuarios': usuarios})
+    return render(request, "usuarios.html", {'usuarios': usuarios})
