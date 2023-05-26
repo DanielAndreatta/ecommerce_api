@@ -20,17 +20,6 @@ class Orden(models.Model):
         fecha_hora_formateada = self.fecha_hora.strftime("%d/%m/%Y %H:%M:%S")
         return 'Fecha_hora: {}'.format(fecha_hora_formateada)
 
-    #def delete(self, *args, **kwargs):
-        # Restablecer el stock de los productos asociados a la orden
-    #    detalles = self.detalles_orden.all()
-    #    for detalle in detalles:
-    #        producto = detalle.producto
-    #        producto.stock += detalle.cantidad
-    #        producto.save()
-
-        # Eliminar la orden
-    #    super(Orden, self).delete(*args, **kwargs)
-
 
 
 
@@ -45,4 +34,19 @@ class DetalleOrden(models.Model):
     def get_total_detalle(self):
         total_detalle = self.precio_unitario * self.cantidad
         return total_detalle
+
+    # inciso 5)
+
+    def clean(self):
+        # Validar que la cantidad sea mayor a 0
+        if self.cantidad <= 0:
+            raise models.ValidationError('La cantidad del producto debe ser mayor a 0.')
+
+    def clean_fields(self, exclude=None):
+        super().clean_fields(exclude=exclude)
+        # Validar que no se repita el producto en el mismo pedido
+        detalles_orden = self.orden.detalles_orden.all()
+        productos = [detalle.producto for detalle in detalles_orden if detalle != self]
+        if self.producto in productos:
+            raise models.ValidationError('No se permiten productos duplicados en el mismo pedido.')
 

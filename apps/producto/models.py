@@ -20,3 +20,18 @@ class Producto(models.Model):
 
     def __str__(self):
         return '{}'.format(self.nombre)
+
+    def sumar_stock(self, cantidad):
+        self.stock += cantidad
+        self.save()
+
+    def restar_stock(self, cantidad):
+
+        #if 0 < cantidad <= self.stock:
+            self.stock -= cantidad
+            self.save()
+        #else:
+            #raise ValueError("La cantidad ingresada es inválida o excede el stock disponible")
+
+
+

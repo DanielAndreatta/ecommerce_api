@@ -1,14 +1,18 @@
 
-from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField
+from rest_framework.serializers import ModelSerializer, ValidationError, SerializerMethodField, FloatField
 from .models import Orden, DetalleOrden
 import requests
 
 
 
 class DetalleOrdenSerializer(ModelSerializer):
+
+    precio_unitario = FloatField(write_only=True)
+
     class Meta:
         model = DetalleOrden
         fields = ['id','orden', 'cantidad', 'producto','precio_unitario']
+
 
 
     #Inciso 4) validar que exista una cantidad del stock del producto
@@ -17,58 +21,16 @@ class DetalleOrdenSerializer(ModelSerializer):
         producto = atributos['producto']
         cantidad = atributos['cantidad']
 
+        # Valida que la cantidad no sea negativa
+        if cantidad < 0:
+            raise ValidationError("la cantidad ingresada debe ser mayor a cero.")
+
+
         # Valida si hay suficiente stock
         if cantidad > producto.stock:
             raise ValidationError("No hay suficiente stock del producto.")
 
         return atributos
-
-
-    # reescribir Create y Update para que se actualice el stock al realizar un detalle orden
-    #FUNCIONA
-    def create(self, datos):
-        # Obtener los datos validados
-        orden = datos['orden']
-        cantidad = datos['cantidad']
-        producto = datos['producto']
-        precio_unitario = producto.precio
-
-        # Actualizar el stock del producto
-        producto.stock -= cantidad
-        producto.save()
-
-        # Crear el detalle de orden
-        detalle_orden = DetalleOrden.objects.create(
-            orden=orden,
-            cantidad=cantidad,
-            producto=producto,
-            precio_unitario=precio_unitario
-        )
-
-        return detalle_orden 
-
-
-
-    #NO PROBE
-    def update(self, instance, datos):
-        # Obtener los datos validados
-        cantidad = datos['cantidad']
-        producto = datos['producto']
-
-        # Calcular la diferencia de cantidad
-        cantidad_diferencia = cantidad - instance.cantidad
-
-        # Actualizar el stock del producto
-        producto.stock -= cantidad_diferencia
-        producto.save()
-
-        # Actualizar el detalle de orden
-        instance.cantidad = cantidad
-        instance.producto = producto
-        instance.save()
-
-        return instance
-
 
 
 

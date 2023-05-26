@@ -29,8 +29,8 @@ class ProductoViewSet(ModelViewSet):
 
     """def perform_create(self, serializer):
         # controlar que no se registren mas de 1 unidad de tipo-asistencia del tipo="comida"
-        tipo_asistencia = serializer.validated_data.get('tipo_asistencia', None)
-        cantidad = serializer.validated_data.get('cantidad', None)
+        tipo_asistencia = serializer.data.get('tipo_asistencia', None)
+        cantidad = serializer.data.get('cantidad', None)
 
         if tipo_asistencia.tipo == TipoAsistencia.COMIDA and cantidad > 1:
             raise ValidationError('La cantidad no puede ser mayor a 1 para asistencia de comida.')

@@ -25,3 +25,23 @@ class OrdenViewSet(ModelViewSet):
 class DetalleOrdenViewSet(ModelViewSet):
     queryset = DetalleOrden.objects.all()
     serializer_class = DetalleOrdenSerializer
+
+    def perform_create(self, serializer):
+        # Restar el stock del producto al crear un detalle de orden
+        producto = serializer.validated_data['producto']
+        cantidad = serializer.validated_data['cantidad']
+        producto.restar_stock(cantidad)
+        serializer.save()
+
+    def perform_update(self, serializer):
+        # Actualizar el stock del producto al modificar un detalle de orden
+        producto = serializer.validated_data['producto']
+        cantidad = serializer.validated_data['cantidad']
+        producto.restar_stock(cantidad - serializer.instance.cantidad)
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        # Sumar el stock del producto al eliminar un detalle de orden
+        producto = instance.producto
+        producto.sumar_stock(instance.cantidad)
+        instance.delete()
