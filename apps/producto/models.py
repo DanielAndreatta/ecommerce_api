@@ -26,12 +26,13 @@ class Producto(models.Model):
         self.save()
 
     def restar_stock(self, cantidad):
+        self.stock -= cantidad
+        self.save()
 
-        #if 0 < cantidad <= self.stock:
-            self.stock -= cantidad
-            self.save()
-        #else:
-            #raise ValueError("La cantidad ingresada es inválida o excede el stock disponible")
+    def reestablecer_stock(self, cantidad):
+        self.stock = cantidad
+        self.save()
+ 
 
 
 

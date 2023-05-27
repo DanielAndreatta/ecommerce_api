@@ -15,6 +15,11 @@ class Orden(models.Model):
         for detalle in self.detalles_orden.all():
             total_orden = total_orden + detalle.get_total_detalle()
         return total_orden
+
+    #def get_uuid(self):
+    #    uuid = self.id
+    #    return uuid
+
     
     def __str__(self):
         fecha_hora_formateada = self.fecha_hora.strftime("%d/%m/%Y %H:%M:%S")
