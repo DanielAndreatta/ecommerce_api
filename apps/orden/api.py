@@ -4,12 +4,15 @@ from .models import Orden, DetalleOrden, Producto
 from .serializers import OrdenSerializer, DetalleOrdenSerializer
 from rest_framework.response import Response
 from rest_framework import status
-#from django.db import transaction
+from .filters import OrdenFilter, DetalleOrdenFilter
+
 
 
 class OrdenViewSet(ModelViewSet):
     queryset = Orden.objects.all()
     serializer_class = OrdenSerializer
+    filterset_class = OrdenFilter
+    ordering_fields = ['fecha_hora']
 
 
     def perform_destroy(self, instance):
@@ -23,22 +26,19 @@ class OrdenViewSet(ModelViewSet):
         instance.delete()
 
 
+
+
 class DetalleOrdenViewSet(ModelViewSet):
     queryset = DetalleOrden.objects.all()
     serializer_class = DetalleOrdenSerializer
+    filterset_class = DetalleOrdenFilter
+    ordering_fields = ['orden']
 
     def perform_create(self, serializer):
-
-        #productos = instance.detalles_producto.all()
-        #for detalle in productos:
-        #    if producto.uuid = detalle.producto.uuid:
 
         # Restar el stock del producto al crear un detalle de orden
         producto = serializer.validated_data['producto']
         cantidad = serializer.validated_data['cantidad']
-        #orden = serializer.validated_data['orden']
-        #uuid_orden = orden.get_uuid()
-
         precio_uni = producto.precio
         producto.restar_stock(cantidad)
         serializer.save(precio_unitario=precio_uni)
@@ -48,7 +48,6 @@ class DetalleOrdenViewSet(ModelViewSet):
         # Obtener el producto anterior y el nuevo producto
         producto_anterior = serializer.instance.producto
         producto_nuevo = serializer.validated_data['producto']
-
         # Obtener la cantidad anterior y nueva
         cantidad_anterior = serializer.instance.cantidad
         cantidad_nueva = serializer.validated_data['cantidad']
@@ -63,27 +62,21 @@ class DetalleOrdenViewSet(ModelViewSet):
         # Reestablecer el stock del producto anterior solo si el producto ha cambiado
         if producto_anterior != producto_nuevo:
             producto_anterior.sumar_stock(cantidad_anterior)
-
         # Restar el stock del producto anterior solo si el producto ha cambiado
         if producto_anterior != producto_nuevo:
             producto_nuevo.restar_stock(cantidad_nueva)
-        
 
         if producto_anterior == producto_nuevo:
-
             # Calcular la diferencia de cantidad
             stock_total = producto_nuevo.stock + cantidad_anterior
             cantidad_diferencia = stock_total - cantidad_nueva
-
             # Restar la diferencia al stock del producto nuevo
             producto_nuevo.reestablecer_stock(cantidad_diferencia)
-
+       
         # Actualizar el precio_unitario con el nuevo precio del producto
         serializer.instance.precio_unitario = producto_nuevo.precio
-
         # Actualizar la cantidad en el detalle de orden
         serializer.instance.cantidad = cantidad_nueva
-
         # Guardar los cambios en el detalle de orden
         serializer.save()
 
