@@ -16,9 +16,6 @@ class Orden(models.Model):
             total_orden = total_orden + detalle.get_total_detalle()
         return total_orden
 
-    #def get_uuid(self):
-    #    uuid = self.id
-    #    return uuid
 
     
     def __str__(self):
@@ -40,18 +37,7 @@ class DetalleOrden(models.Model):
         total_detalle = self.precio_unitario * self.cantidad
         return total_detalle
 
-    # inciso 5)
 
-    def clean(self):
-        # Validar que la cantidad sea mayor a 0
-        if self.cantidad <= 0:
-            raise models.ValidationError('La cantidad del producto debe ser mayor a 0.')
 
-    def clean_fields(self, exclude=None):
-        super().clean_fields(exclude=exclude)
-        # Validar que no se repita el producto en el mismo pedido
-        detalles_orden = self.orden.detalles_orden.all()
-        productos = [detalle.producto for detalle in detalles_orden if detalle != self]
-        if self.producto in productos:
-            raise models.ValidationError('No se permiten productos duplicados en el mismo pedido.')
+
 

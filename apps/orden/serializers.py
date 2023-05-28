@@ -19,20 +19,22 @@ class DetalleOrdenSerializer(ModelSerializer):
         # Obtiene el producto y la cantidad del detalle de orden
         producto = atributos['producto']
         cantidad = atributos['cantidad']
+        orden = atributos['orden']
 
+
+        if orden.detalles_orden.filter(producto=producto).exists():
+            raise ValidationError('Ya existe un detalle con el mismo producto en esta orden.')
 
         # Valida que la cantidad no sea negativa
         if cantidad <= 0:
             raise ValidationError("la cantidad ingresada debe ser mayor a cero.")
 
-
         # Valida si hay suficiente stock
-        #if cantidad > producto.stock:
-        #    raise ValidationError("No hay suficiente stock del producto.")
+        if cantidad > producto.stock:
+            raise ValidationError("No hay suficiente stock del producto.")
+
 
         return atributos
-
-
 
 
 
@@ -45,10 +47,6 @@ class OrdenSerializer(ModelSerializer):
         model = Orden
         #fields = ['id', 'fecha_hora', 'total_orden', 'total_orden_usd']
         fields = ['id','fecha_hora','detalle_orden','total_orden','total_orden_usd']
-
-
-    #def get_detalle_orden(self):
-    #    return self.detalle_orden
 
 
     # Insciso 3)
