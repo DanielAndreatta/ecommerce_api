@@ -20,3 +20,19 @@ class Producto(models.Model):
 
     def __str__(self):
         return '{}'.format(self.nombre)
+
+    def sumar_stock(self, cantidad):
+        self.stock += cantidad
+        self.save()
+
+    def restar_stock(self, cantidad):
+        self.stock -= cantidad
+        self.save()
+
+    def reestablecer_stock(self, cantidad):
+        self.stock = cantidad
+        self.save()
+ 
+
+
+

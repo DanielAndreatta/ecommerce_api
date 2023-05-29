@@ -6,3 +6,5 @@ db.sqlite3
 media/
 venv/
 ecommerce_api/configuraciones_locales.py
+apps/orden/migrations/0001_initial.py
+apps/producto/migrations/0001_initial.py

@@ -16,20 +16,11 @@ class Orden(models.Model):
             total_orden = total_orden + detalle.get_total_detalle()
         return total_orden
 
+
+    
     def __str__(self):
         fecha_hora_formateada = self.fecha_hora.strftime("%d/%m/%Y %H:%M:%S")
         return 'Fecha_hora: {}'.format(fecha_hora_formateada)
-
-    #def delete(self, *args, **kwargs):
-        # Restablecer el stock de los productos asociados a la orden
-    #    detalles = self.detalles_orden.all()
-    #    for detalle in detalles:
-    #        producto = detalle.producto
-    #        producto.stock += detalle.cantidad
-    #        producto.save()
-
-        # Eliminar la orden
-    #    super(Orden, self).delete(*args, **kwargs)
 
 
 
@@ -38,10 +29,15 @@ class DetalleOrden(models.Model):
 
     orden = models.ForeignKey(Orden, on_delete=models.CASCADE, related_name='detalles_orden')
     cantidad = models.IntegerField()
+    precio_unitario = models.FloatField()
     producto = models.ForeignKey(Producto, on_delete=models.PROTECT, related_name='detalles_producto')
 
     #inciso 3)
     def get_total_detalle(self):
-        total_detalle = self.producto.precio * self.cantidad
+        total_detalle = self.precio_unitario * self.cantidad
         return total_detalle
+
+
+
+
 
