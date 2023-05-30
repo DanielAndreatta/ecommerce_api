@@ -13,6 +13,7 @@ class OrdenViewSet(ModelViewSet):
     serializer_class = OrdenSerializer
     filterset_class = OrdenFilter
     ordering_fields = ['fecha_hora']
+    lookup_field = 'uuid'
 
 
     def perform_destroy(self, instance):
@@ -33,6 +34,7 @@ class DetalleOrdenViewSet(ModelViewSet):
     serializer_class = DetalleOrdenSerializer
     filterset_class = DetalleOrdenFilter
     ordering_fields = ['orden']
+    lookup_field = 'uuid'
 
     def perform_create(self, serializer):
 

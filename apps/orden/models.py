@@ -1,4 +1,4 @@
-
+from uuid import uuid4
 from django.db import models
 from datetime import datetime
 from apps.producto.models import Producto
@@ -6,6 +6,7 @@ from apps.producto.models import Producto
 
 class Orden(models.Model):
 
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid4)
     fecha_hora = models.DateTimeField(default=datetime.today)
 
 
@@ -27,6 +28,7 @@ class Orden(models.Model):
 
 class DetalleOrden(models.Model):
 
+    uuid = models.UUIDField(unique=True, editable=False, default=uuid4)
     orden = models.ForeignKey(Orden, on_delete=models.CASCADE, related_name='detalles_orden')
     cantidad = models.IntegerField()
     precio_unitario = models.FloatField()

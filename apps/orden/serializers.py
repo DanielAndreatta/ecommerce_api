@@ -11,7 +11,7 @@ class DetalleOrdenSerializer(ModelSerializer):
 
     class Meta:
         model = DetalleOrden
-        fields = ['id','orden', 'cantidad', 'producto','precio_unitario']
+        fields = ['uuid', 'orden', 'cantidad', 'producto','precio_unitario']
 
 
     #Inciso 4) validar que exista una cantidad del stock del producto
@@ -46,7 +46,7 @@ class OrdenSerializer(ModelSerializer):
     class Meta:
         model = Orden
         #fields = ['id', 'fecha_hora', 'total_orden', 'total_orden_usd']
-        fields = ['id','fecha_hora','detalle_orden','total_orden','total_orden_usd']
+        fields = ['uuid', 'fecha_hora','detalle_orden','total_orden','total_orden_usd']
 
 
     # Insciso 3)

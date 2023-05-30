@@ -12,7 +12,6 @@ class ProductoFilter(FilterSet):
     min_precio = NumberFilter(field_name='precio', lookup_expr='gte')
     max_stock = NumberFilter(field_name='stock', lookup_expr='lte')
     min_stock = NumberFilter(field_name='stock', lookup_expr='gte')
-
     nombre = CharFilter(field_name='nombre', lookup_expr='icontains')
 
     
