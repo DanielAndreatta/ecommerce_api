@@ -19,7 +19,7 @@ class DetalleOrdenFilter(FilterSet):
         model = DetalleOrden
         fields = ['uuid', 'orden', 'max_cantidad', 'min_cantidad', 'producto','max_precio_unitario', 'min_precio_unitario']
 
-    max_cantidad = NumberFilter(field_name='precio_unitario', lookup_expr='lte')
-    min_cantidad = NumberFilter(field_name='precio_unitario', lookup_expr='gte')
+    max_cantidad = NumberFilter(field_name='cantidad', lookup_expr='lte')
+    min_cantidad = NumberFilter(field_name='cantidad', lookup_expr='gte')
     max_precio_unitario = NumberFilter(field_name='precio_unitario', lookup_expr='lte')
     min_precio_unitario = NumberFilter(field_name='precio_unitario', lookup_expr='gte')
