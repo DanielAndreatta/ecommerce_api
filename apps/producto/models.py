@@ -6,7 +6,7 @@ from django.db import models
 class Producto(models.Model):
 
     uuid = models.UUIDField(unique=True, editable=False, default=uuid4)
-    nombre = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=200, unique=True)
     precio = models.FloatField()
     stock = models.IntegerField(
         validators=[
