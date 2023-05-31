@@ -6,22 +6,30 @@
     <p>
         Una API REST utilizando DJANGO REST FRAMEWORK, que brinda una funcionalidad básica y acotada de un E-commerce.
     </p>
-    <h3>Requisitos principales:</h3>
-    <ul>
-        <li>Gestionar los .</li>
-        <li>Gestionar los .</li>
-        <li>Gestionar las .</li>
-        <li>Gestionar las .</li>
-        <li>Gestionar usuarios y roles.</li>
-    </ul>
 
     <h3>ENDPOINTS:</h3>
     <ul>
         <li>CRUD de productos.</li>
+        <h4>GET-POST<br> api/v1/producto/</h4>
+        <p>Ruta para listar y crear productos.</p>
+        <h4>GET-PUT-PATCH-DELETE<br> api/v1/producto/{uuid}/</h4>
+        <p>Ruta para obtener, actualizar y eliminar un producto específico.</p><br>
+
         <li>CRUD de ordenes.</li>
+        <h4>GET-POST<br> api/v1/orden/</h4>
+        <p>Ruta para listar y crear órdenes.</p>
+        <h4>GET-PUT-PATCH-DELETE<br> api/v1/orden/{uuid}</h4>
+        <p>Ruta para obtener, actualizar y eliminar una orden específica.</p><br>
+  
         <li>CRUD de detalles de ordenes.</li>
-        <li>Restaurar stock del producto.</li>
-        <li>Actualizar stock del producto.</li>
+        <h4>GET-POST<br> api/v1/detalle_orden/</h4>
+        <p>Ruta para listar y crear detalles de órdenes.</p>
+        <h4>GET-PUT-PATCH-DELETE<br> api/v1/detalle_orden/{uuid}/</h4>
+        <p>Ruta para obtener, actualizar y eliminar un detalle de orden específico.</p><br>
+
+        <li>ACTUALIZAR stock del producto.</li>
+        <h4>PUT-PATCH<br> api/v1/producto/{uuid}/stock/</h4>
+        <p>Ruta para obtener y actualizar el campo stock de un producto especifico.</p><br>    
     </ul>
 
     <h3>URL del API:</h3>

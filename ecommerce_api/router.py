@@ -11,10 +11,4 @@ router.register('orden', OrdenViewSet)
 router.register('detalle_orden', DetalleOrdenViewSet)
 
 
-
-"""urlpatterns = [
-    path('producto/<uuid:uuid>', ProductoListCreateView.as_view()),
-    #path('programa/<int:pk>/asignacion-beneficio/', AsignacionBeneficioListCreateView.as_view()),
-]"""
-
 urlpatterns = router.urls

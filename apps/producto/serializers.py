@@ -8,3 +8,8 @@ class ProductoSerializer(ModelSerializer):
         model = Producto
         fields = ['uuid', 'nombre', 'precio', 'stock']
 
+
+class ProductoStockSerializer(ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = ['uuid', 'stock']

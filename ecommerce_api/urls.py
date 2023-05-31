@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from apps.producto.api import ProductoStockUpdateView
 
 
 
@@ -24,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='base/home.html'), name='home'),
     path('api/v1/', include('ecommerce_api.router')),
+    path('api/v1/producto/<uuid:uuid>/stock/', ProductoStockUpdateView.as_view(), name='producto-stock-update'),
     path('usuarios/', include('apps.core.urls')),
     path('api-auth/', include('rest_framework.urls')),
 ]

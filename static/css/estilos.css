@@ -90,7 +90,7 @@ ul.menu {
   float: left;
 }
 
-li a, .dropbtn {
+/* li a, .dropbtn {
   display: inline-block;
   color: white;
   text-align: center;
@@ -132,3 +132,4 @@ li.dropdown {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+*/
