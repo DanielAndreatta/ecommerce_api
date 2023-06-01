@@ -17,7 +17,8 @@ class Orden(models.Model):
             total_orden = total_orden + detalle.get_total_detalle()
         return total_orden
 
-
+    class Meta:
+        ordering = ('fecha_hora',)
     
     def __str__(self):
         fecha_hora_formateada = self.fecha_hora.strftime("%d/%m/%Y %H:%M:%S")
@@ -31,13 +32,16 @@ class DetalleOrden(models.Model):
     uuid = models.UUIDField(unique=True, editable=False, default=uuid4)
     orden = models.ForeignKey(Orden, on_delete=models.CASCADE, related_name='detalles_orden')
     cantidad = models.IntegerField()
-    precio_unitario = models.FloatField()
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     producto = models.ForeignKey(Producto, on_delete=models.PROTECT, related_name='detalles_producto')
+
+    class Meta:
+        ordering = ('orden',)
 
     #inciso 3)
     def get_total_detalle(self):
         total_detalle = self.precio_unitario * self.cantidad
-        return total_detalle
+        return round(total_detalle, 2)
 
 
 

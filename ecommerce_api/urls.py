@@ -26,6 +26,5 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='base/home.html'), name='home'),
     path('api/v1/', include('ecommerce_api.router')),
     path('api/v1/producto/<uuid:uuid>/stock/', ProductoStockUpdateView.as_view(), name='producto-stock-update'),
-    path('usuarios/', include('apps.core.urls')),
     path('api-auth/', include('rest_framework.urls')),
 ]

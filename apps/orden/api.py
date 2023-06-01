@@ -1,18 +1,17 @@
-
+from rest_framework.exceptions import ValidationError
 from rest_framework.viewsets import ModelViewSet
 from .models import Orden, DetalleOrden, Producto
 from .serializers import OrdenSerializer, DetalleOrdenSerializer
-from rest_framework.response import Response
+#from rest_framework.response import Response
 from rest_framework import status
 from .filters import OrdenFilter, DetalleOrdenFilter
 
 
 
 class OrdenViewSet(ModelViewSet):
-    queryset = Orden.objects.all()
+    queryset = Orden.objects.all().order_by('-fecha_hora')
     serializer_class = OrdenSerializer
     filterset_class = OrdenFilter
-    ordering_fields = ['fecha_hora']
     lookup_field = 'uuid'
 
 
@@ -37,49 +36,41 @@ class DetalleOrdenViewSet(ModelViewSet):
     lookup_field = 'uuid'
 
     def perform_create(self, serializer):
-
-        # Restar el stock del producto al crear un detalle de orden
         producto = serializer.validated_data['producto']
         cantidad = serializer.validated_data['cantidad']
+        orden = serializer.validated_data['orden']
+
+        # Inciso 5) Validar si ya existe un detalle con el mismo producto en esta orden
+        if orden.detalles_orden.filter(producto=producto).exists():
+            raise ValidationError('Ya existe un detalle con el mismo producto en esta orden.')
+
         precio_uni = producto.precio
+        # Restar el stock del producto al crear un detalle de orden
         producto.restar_stock(cantidad)
         serializer.save(precio_unitario=precio_uni)
 
 
     def perform_update(self, serializer):
-        # Obtener el producto anterior y el nuevo producto
         producto_anterior = serializer.instance.producto
         producto_nuevo = serializer.validated_data['producto']
-        # Obtener la cantidad anterior y nueva
         cantidad_anterior = serializer.instance.cantidad
         cantidad_nueva = serializer.validated_data['cantidad']
 
-        #print("PRODUCTO ANTERIOR:", producto_anterior)
-        #print("PRODUCTO NUEVO:", producto_nuevo)
-        #print("stock_anterior:", producto_anterior.stock)
-        #print("stock_nuevo:", producto_nuevo.stock)
-        #print("Valor de cantidad_anterior:", cantidad_anterior)
-        #print("Valor de cantidad_nueva:", cantidad_nueva)
-
-        # Reestablecer el stock del producto anterior solo si el producto ha cambiado
         if producto_anterior != producto_nuevo:
+            orden = serializer.instance.orden
+            # Inciso 5) Validar si ya existe un detalle con el producto nuevo en esta orden
+            if orden.detalles_orden.exclude(uuid=serializer.instance.uuid).filter(producto=producto_nuevo).exists():
+                raise ValidationError('Ya existe un detalle con el mismo producto en esta orden.')
             producto_anterior.sumar_stock(cantidad_anterior)
-        # Restar el stock del producto anterior solo si el producto ha cambiado
-        if producto_anterior != producto_nuevo:
             producto_nuevo.restar_stock(cantidad_nueva)
 
         if producto_anterior == producto_nuevo:
-            # Calcular la diferencia de cantidad
             stock_total = producto_nuevo.stock + cantidad_anterior
             cantidad_diferencia = stock_total - cantidad_nueva
-            # Restar la diferencia al stock del producto nuevo
             producto_nuevo.reestablecer_stock(cantidad_diferencia)
-       
-        # Actualizar el precio_unitario con el nuevo precio del producto
+    
         serializer.instance.precio_unitario = producto_nuevo.precio
-        # Actualizar la cantidad en el detalle de orden
         serializer.instance.cantidad = cantidad_nueva
-        # Guardar los cambios en el detalle de orden
         serializer.save()
 
 
