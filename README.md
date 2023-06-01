@@ -26,20 +26,20 @@ DetalleOrden:
 a. Registrar / Editar un producto
 b. Eliminar un producto
 c. Consultar un producto / Listar todos los productos
-b. Modificar solo el stock de un producto
-a. Registrar / Editar una orden.
-b. Eliminar una orden. Restaurar stock del producto
-c. Registrar / Editar Detalle de Orden. Debe actualizar el stock del producto
-d. Consultar una orden y sus detalles
-e. Listar todas las órdenes
+d. Modificar solo el stock de un producto
+e. Registrar / Editar una orden.
+f. Eliminar una orden. Restaurar stock del producto
+g. Registrar / Editar Detalle de Orden. Debe actualizar el stock del producto
+h. Consultar una orden y sus detalles
+i. Listar todas las órdenes
 
 3. La clase Orden debe exponer un método get_total el cual calcula el total de la operación y debe retornar ese valor en el serializador correspondiente. También debe exponer el método get_total_usd, utilizando el API de https://www.dolarsi.com/api/api.php?type=valoresprincipales, con “dólar blue” para que devuelva el precio en dólares.
 
 4. Al crear o editar un detalle de orden, validar que haya suficiente stock del producto, en caso de no contar con stock se debe retornar un error de validación.
 
 5. Así también, al momento de crear una orden se debe validar:
- que la cantidad de cada producto sea mayor a 0
- que no se repitan productos en el mismo pedido
+a. que la cantidad de cada producto sea mayor a 0
+b. que no se repitan productos en el mismo pedido
 
 6. Para la implementación de la API se puede utilizar cualquiera de las Vistas repasadas en clase: ApiView, Generic View, ModelViewSet, etc.
 
