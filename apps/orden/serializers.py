@@ -16,17 +16,19 @@ class DetalleOrdenSerializer(ModelSerializer):
     #Inciso 4) validar si hay suficiente stock. 
     #Inciso 5) validar que la cantidad del producto sea mayor a cero.
     def validate(self, atributos):
-        producto = atributos['producto']
-        cantidad = atributos['cantidad']
+        try:
+            producto = atributos['producto']
+            cantidad = atributos['cantidad']
 
-        if cantidad > producto.stock:
-            raise ValidationError("No hay suficiente stock del producto.")
+            if cantidad > producto.stock:
+                raise ValidationError("No hay suficiente stock del producto.")
 
-        if cantidad <= 0:
-            raise ValidationError("La cantidad ingresada debe ser mayor a cero.")
+            if cantidad <= 0:
+                raise ValidationError("La cantidad ingresada debe ser mayor a cero.")
 
-        return atributos
-
+            return atributos
+        except KeyError as e:
+            raise ValidationError("Faltan atributos requeridos en la solicitud.")
 
 
 class OrdenSerializer(ModelSerializer):
@@ -43,10 +45,13 @@ class OrdenSerializer(ModelSerializer):
         return orden.get_total_orden()
 
     def get_total_usd(self, orden):
-        response = requests.get('https://www.dolarsi.com/api/api.php?type=valoresprincipales').json()
-        dolar_blue = response[1]['casa']['venta'].replace(',', '.')
-        cotizar_dolar = float(orden.get_total_orden()) / float(dolar_blue)
-        return round(cotizar_dolar, 2)
+        try:
+            response = requests.get('https://www.dolarsi.com/api/api.php?type=valoresprincipales').json()
+            dolar_blue = response[1]['casa']['venta'].replace(',', '.')
+            cotizar_dolar = float(orden.get_total_orden()) / float(dolar_blue)
+            return round(cotizar_dolar, 2)
+        except Exception as e:
+            raise ValidationError("Error al obtener el total en USD: " + str(e))
 
 
 
