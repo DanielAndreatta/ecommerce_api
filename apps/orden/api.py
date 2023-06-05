@@ -45,6 +45,7 @@ class DetalleOrdenViewSet(ModelViewSet):
             orden = serializer.validated_data['orden']
 
             # Inciso 5) Validar si ya existe un detalle con el mismo producto en esta orden
+            
             #if self.action != 'update' and orden.detalles_orden.exclude(uuid=serializer.instance.uuid).filter(producto=producto).exists():
             if orden.detalles_orden.filter(producto=producto).exists():
                 raise ValidationError('Ya existe un detalle con el mismo producto en esta orden.')
