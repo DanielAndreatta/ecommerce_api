@@ -20,3 +20,5 @@ def crear_productos():
     producto3 = crear_producto('Regla', '800', 20)
 
     return producto1, producto2, producto3
+
+

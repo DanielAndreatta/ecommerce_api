@@ -1,5 +1,6 @@
 import pytest
 from apps.orden.models import DetalleOrden, Orden
+from datetime import datetime
 from apps.producto.tests.fixtures import crear_productos
 
 
@@ -62,3 +63,22 @@ def crear_ordenes_y_detalles2():
     detalles_orden2 = crear_detalle_orden(orden1, 2, producto2.precio, producto2)
 
     return detalles_orden2
+
+
+@pytest.fixture
+def orden_con_detalles(crear_ordenes2, crear_productos, cantidad):
+
+    orden1 = crear_ordenes2
+
+    producto1, producto2, producto3 = crear_productos
+
+    data = {
+        "orden": orden1.id,
+        "cantidad": cantidad,
+        "precio_unitario": producto3.precio,
+        "producto": producto3.id,
+    }
+
+    return data
+
+
