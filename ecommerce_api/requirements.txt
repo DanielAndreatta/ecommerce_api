@@ -4,6 +4,13 @@ Django==4.2.1
 psycopg2-binary==2.8.5
 
 djangorestframework==3.14.0
+
+# testing
+pytest==7.1.1
+pytest-django==4.5.2
+
+
 django-filter==23.2
 
+# modulo para hacer peticiones HTTP
 requests==2.30.0

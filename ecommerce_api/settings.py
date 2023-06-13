@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'rest_framework',
-    #'django_filters',
     'apps.producto',
     'apps.orden',
     'apps.core',
