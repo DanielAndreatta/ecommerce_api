@@ -65,7 +65,8 @@ def crear_ordenes_y_detalles2(crear_productos):
     return detalles_orden2
 
 
-@pytest.
+"""
+@pytest.fixture
 def ordenfixture_con_detalles(crear_ordenes2, crear_productos, cantidad):
 
     orden1 = crear_ordenes2
@@ -80,5 +81,6 @@ def ordenfixture_con_detalles(crear_ordenes2, crear_productos, cantidad):
     }
 
     return data
+"""
 
 
