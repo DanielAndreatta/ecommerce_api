@@ -41,7 +41,7 @@ def crear_ordenes2():
 
 
 @pytest.fixture
-def crear_ordenes_y_detalles1():
+def crear_ordenes_y_detalles1(crear_productos):
 
     orden1 = crear_orden('2023-06-12')
 
@@ -54,7 +54,7 @@ def crear_ordenes_y_detalles1():
     return detalles_orden1, detalles_orden2
 
 @pytest.fixture
-def crear_ordenes_y_detalles2():
+def crear_ordenes_y_detalles2(crear_productos):
 
     orden1 = crear_orden('2023-06-12')
 
@@ -65,8 +65,8 @@ def crear_ordenes_y_detalles2():
     return detalles_orden2
 
 
-@pytest.fixture
-def orden_con_detalles(crear_ordenes2, crear_productos, cantidad):
+@pytest.
+def ordenfixture_con_detalles(crear_ordenes2, crear_productos, cantidad):
 
     orden1 = crear_ordenes2
 

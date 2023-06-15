@@ -23,8 +23,6 @@ def test_api_creacion_detalle_orden(api_client, get_default_test_user, crear_ord
 
     producto1, producto2, producto3 = crear_productos
 
-    # tipo_asistencia = programa1.tipo_asistencias.filter(tipo=tipo_asistencia).first()
-
     data = {
         "orden": orden1.id,
         "cantidad": cantidad,
