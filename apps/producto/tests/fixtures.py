@@ -2,7 +2,7 @@ import pytest
 from apps.producto.models import Producto
 
 
-def crear_producto(nombre, precio, stock):
+def crear_producto_con_parametros(nombre, precio, stock):
     producto = Producto.objects.create(
         nombre=nombre,
         precio=precio,
@@ -13,11 +13,11 @@ def crear_producto(nombre, precio, stock):
 
 @pytest.fixture
 def crear_productos():
-    producto1 = crear_producto('Lapicera', '300', 50)
+    producto1 = crear_producto_con_parametros('Lapicera', '300', 50)
 
-    producto2 = crear_producto('Cuaderno', '1500', 10)
+    producto2 = crear_producto_con_parametros('Cuaderno', '1500', 10)
 
-    producto3 = crear_producto('Regla', '800', 20)
+    producto3 = crear_producto_con_parametros('Regla', '800', 20)
 
     return producto1, producto2, producto3
 

@@ -1,7 +1,7 @@
 import pytest
 from apps.core.tests.fixtures import api_client, get_default_test_user
 from apps.orden.models import DetalleOrden
-from apps.orden.tests.fixtures import crear_ordenes2
+from apps.orden.tests.fixtures import crear_orden
 from apps.producto.tests.fixtures import crear_productos
 
 
@@ -13,18 +13,18 @@ from apps.producto.tests.fixtures import crear_productos
 
 
 @pytest.mark.django_db
-def test_api_creacion_detalle_orden(api_client, get_default_test_user, crear_ordenes2, crear_productos,
+def test_api_creacion_detalle_orden(api_client, get_default_test_user, crear_orden, crear_productos,
                                     cantidad, codigo_http, total_registros, loguear_usuario):
     client = api_client
     if loguear_usuario:
         client.force_authenticate(user=get_default_test_user)
 
-    orden1 = crear_ordenes2
+    orden = crear_orden
 
     producto1, producto2, producto3 = crear_productos
 
     data = {
-        "orden": orden1.id,
+        "orden": orden.id,
         "cantidad": cantidad,
         "precio_unitario": producto3.precio,
         "producto": producto3.id,
@@ -34,5 +34,5 @@ def test_api_creacion_detalle_orden(api_client, get_default_test_user, crear_ord
     assert response.status_code == codigo_http
 
     assert DetalleOrden.objects.filter(
-        orden=orden1, cantidad=cantidad, precio_unitario=producto3.precio, producto=producto3
+        orden=orden, cantidad=cantidad, precio_unitario=producto3.precio, producto=producto3
     ).count() == total_registros

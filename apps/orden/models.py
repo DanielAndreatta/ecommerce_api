@@ -2,6 +2,7 @@ from uuid import uuid4
 from django.db import models
 from datetime import datetime
 from apps.producto.models import Producto
+from decimal import Decimal
 
 
 class Orden(models.Model):
@@ -40,7 +41,7 @@ class DetalleOrden(models.Model):
 
     #inciso 3)
     def get_total_detalle(self):
-        total_detalle = self.precio_unitario * self.cantidad
+        total_detalle = Decimal(self.precio_unitario) * int(self.cantidad)
         return round(total_detalle, 2)
 
 
