@@ -1,6 +1,6 @@
 import pytest
 from apps.orden.models import DetalleOrden, Orden
-
+from datetime import datetime
 
 def crear_orden_con_parametros(fecha_hora):
     orden, _ = Orden.objects.get_or_create(
@@ -33,7 +33,8 @@ def crear_ordenes():
 @pytest.fixture
 def crear_orden():
 
-    orden = crear_orden_con_parametros('2023-06-12')
+    fecha_hora = datetime.strptime('2023-06-12', '%Y-%m-%d')
+    orden = crear_orden_con_parametros(fecha_hora)
 
     return orden
 
