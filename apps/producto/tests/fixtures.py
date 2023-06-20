@@ -12,6 +12,13 @@ def crear_producto_con_parametros(nombre, precio, stock):
 
 
 @pytest.fixture
+def crear_producto():
+    producto = crear_producto_con_parametros('Lapicera', '300', 50)
+
+    return producto
+
+
+@pytest.fixture
 def crear_productos():
     producto1 = crear_producto_con_parametros('Lapicera', '300', 50)
 

@@ -2,6 +2,7 @@ import pytest
 from apps.orden.models import DetalleOrden, Orden
 from datetime import datetime
 
+
 def crear_orden_con_parametros(fecha_hora):
     orden, _ = Orden.objects.get_or_create(
         fecha_hora=fecha_hora

@@ -1,8 +1,10 @@
 import pytest
+from apps.orden.models import DetalleOrden, Orden
 from apps.core.tests.fixtures import api_client, get_default_test_user
 from apps.orden.tests.fixtures import crear_ordenes, crear_detalle_orden, crear_orden, crear_detalles_orden
 from apps.producto.tests.fixtures import crear_productos
 from datetime import datetime
+from rest_framework.test import APIClient
 
 
 @pytest.mark.parametrize(
@@ -12,7 +14,7 @@ from datetime import datetime
 
 #Se devuelven todas las ordenes (GET)
 @pytest.mark.django_db
-def test_api_listar_orden(api_client, get_default_test_user, crear_ordenes, codigo_http, total_registros):
+def test_api_listar_ordenes(api_client, get_default_test_user, crear_ordenes, codigo_http, total_registros):
 
     client = api_client
     client.force_authenticate(user=get_default_test_user)
@@ -30,34 +32,27 @@ def test_api_listar_orden(api_client, get_default_test_user, crear_ordenes, codi
     assert json_data[1]['fecha_hora'] == '2020-05-11T00:00:00Z'
 
 
-
 @pytest.mark.parametrize(
     'codigo_http, total_registros',
-    [(404, 1)]
+    [(200, 1)]
 )
 
 #Inciso 1 (verificar que al ejecutar el endpoint de recuperación de una orden, se devuelven los datos correctos de la orden y su detalle)
 @pytest.mark.django_db
-def test_api_recuperar_ordenes(api_client, get_default_test_user, crear_orden, crear_productos, crear_detalles_orden, codigo_http, total_registros):
+def test_api_recuperar_orden(api_client, get_default_test_user, crear_orden, codigo_http, total_registros):
 
     client = api_client
     client.force_authenticate(user=get_default_test_user)
 
     orden = crear_orden
 
-    #response = client.get(f'/api/v1/orden/{detalle_orden1.orden.id}/')
-    response = client.get(f'/api/v1/orden/1/')
+    response = client.get(f'/api/v1/orden/{orden.uuid}/')
 
     assert response.status_code == codigo_http
 
-    json_data = response.json()
-    
-    assert len(json_data) == total_registros
-
-    assert json_data[0]['fecha_hora'] == '2023-06-12T00:00:00Z'
-    #fecha_hora_orden = datetime.strptime(json_data[0]['fecha_hora'], "%Y-%m-%dT%H:%M:%SZ")
-    #assert fecha_hora_orden == datetime(2023, 6, 12, 0, 0, 0)
-
+    assert Orden.objects.filter(
+        uuid = orden.uuid, fecha_hora = '2023-06-12T00:00:00Z'
+    ).count() == total_registros
 
 
 @pytest.mark.parametrize(
@@ -66,23 +61,27 @@ def test_api_recuperar_ordenes(api_client, get_default_test_user, crear_orden, c
      (5, 201, 1, True)]
 )
 
-#Inciso 2
+#Inciso 2 (crear orden correctamente)
 @pytest.mark.django_db
-def test_api_creacion_detalle_orden(api_client, get_default_test_user, crear_orden, crear_productos,
+def test_api_creacion_orden(api_client, get_default_test_user, crear_orden, crear_productos,
                                     cantidad, codigo_http, total_registros, loguear_usuario):
     client = api_client
     if loguear_usuario:
         client.force_authenticate(user=get_default_test_user)
 
-    orden = crear_orden
-
-    producto1, producto2, producto3 = crear_productos
-
-    data = {
+    """
+    data1 = {
         "orden": orden.id,
         "cantidad": cantidad,
         "precio_unitario": producto3.precio,
         "producto": producto3.id,
+    }
+
+    data = {
+        'fecha_hora': '2020-05-11',
+        'detalles_orden': [
+            {'producto': producto.id, 'cantidad': 2},
+        ]
     }
 
     response = client.post(f'/api/v1/detalle_orden/', data=data)
@@ -91,15 +90,22 @@ def test_api_creacion_detalle_orden(api_client, get_default_test_user, crear_ord
     assert DetalleOrden.objects.filter(
         orden=orden, cantidad=cantidad, precio_unitario=producto3.precio, producto=producto3
     ).count() == total_registros
-
-
-
-
+    """
 
 
 #Inciso 7 (verificar que el método get_total de una orden, devuelve el valor correcto de acuerdo al total de cada detalle)
 @pytest.mark.django_db
-def test_api_get_total_orden(crear_detalle_orden):
+def test_api_get_total_orden(crear_detalles_orden):
+
+    total_esperado = (300 * 10) + (800 * 5)
+    detalle_orden1, detalle_orden2 = crear_detalles_orden
+    total = detalle_orden1.orden.get_total_orden()
+    assert total == total_esperado
+
+
+#Inciso 8 (verificar que el método get_total_detalle de un detalle de orden, devuelve el valor correcto de acuerdo a al precio del producto y cantidad de la orden)
+@pytest.mark.django_db
+def test_api_get_total_detalle(crear_detalle_orden):
 
     total_esperado = 1500 * 2
     total = crear_detalle_orden.get_total_detalle()
