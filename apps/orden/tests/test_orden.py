@@ -1,4 +1,5 @@
 import pytest
+import uuid
 from apps.orden.models import DetalleOrden, Orden
 from apps.core.tests.fixtures import api_client, get_default_test_user
 from apps.orden.tests.fixtures import crear_ordenes, crear_detalle_orden, crear_orden, crear_detalles_orden
@@ -39,20 +40,40 @@ def test_api_listar_ordenes(api_client, get_default_test_user, crear_ordenes, co
 
 #Inciso 1 (verificar que al ejecutar el endpoint de recuperación de una orden, se devuelven los datos correctos de la orden y su detalle)
 @pytest.mark.django_db
-def test_api_recuperar_orden(api_client, get_default_test_user, crear_orden, codigo_http, total_registros):
+def test_api_recuperar_orden(api_client, get_default_test_user, crear_detalle_orden, codigo_http, total_registros):
 
     client = api_client
     client.force_authenticate(user=get_default_test_user)
 
-    orden = crear_orden
+    detalle_orden = crear_detalle_orden
 
-    response = client.get(f'/api/v1/orden/{orden.uuid}/')
+    response = client.get(f'/api/v1/orden/{detalle_orden.orden.uuid}/')
 
     assert response.status_code == codigo_http
 
-    assert Orden.objects.filter(
-        uuid = orden.uuid, fecha_hora = '2023-06-12T00:00:00Z'
+    assert DetalleOrden.objects.filter(
+        id = detalle_orden.orden.id
     ).count() == total_registros
+
+    #Guarda los datos obtenidos de la respuesta de la solicitud HTTP en formato JSON.
+    json_data = response.json()
+
+    #print(json_data)
+    #print(detalle_orden.orden.uuid)
+    #print(detalle_orden.uuid)
+    #print(detalle_orden.producto.id)
+
+    assert uuid.UUID(json_data['uuid']) == detalle_orden.orden.uuid
+    assert json_data['fecha_hora'] == '2023-06-12T00:00:00Z'
+    assert json_data['total_orden_pesos'] == 3000
+    assert json_data['total_orden_usd'] == 6.1
+
+    primer_detalle = json_data['detalle_orden'][0]
+
+    assert uuid.UUID(primer_detalle['uuid']) == detalle_orden.uuid
+    assert primer_detalle['cantidad'] == 2
+    assert primer_detalle['producto'] == detalle_orden.producto.id
+    assert primer_detalle['precio_unitario'] == 1500
 
 
 @pytest.mark.parametrize(
