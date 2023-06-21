@@ -1,8 +1,9 @@
 import pytest
 import uuid
+from apps.producto.models import Producto
 from apps.orden.models import DetalleOrden, Orden
 from apps.core.tests.fixtures import api_client, get_default_test_user
-from apps.orden.tests.fixtures import crear_ordenes, crear_detalle_orden, crear_orden, crear_detalles_orden
+from apps.orden.tests.fixtures import crear_ordenes, crear_detalle_orden, crear_orden, crear_detalles_orden, crear_ordenes_con_detalles
 from apps.producto.tests.fixtures import crear_productos
 from datetime import datetime
 from rest_framework.test import APIClient
@@ -157,6 +158,71 @@ def test_api_creacion_orden(api_client, get_default_test_user, crear_orden, crea
     #actualizado el stock del producto
     assert producto1.stock == 45
     assert producto3.stock == 17
+
+
+
+#Inciso 5 (verificar que al ejecutar el endpoint de eliminación de una orden, ésta se haya eliminado de la base de datos correctamente, junto con su detalle, y que además, se haga incrementado el stock de producto relacionado con cada detalle de orden)
+@pytest.mark.parametrize(
+    'codigo_http, loguear_usuario',
+    [(204, True)]
+)
+@pytest.mark.django_db
+def test_api_eliminar_orden(api_client, get_default_test_user, crear_orden, crear_productos,
+                                                                codigo_http, loguear_usuario):
+
+    client = api_client
+    if loguear_usuario:
+        client.force_authenticate(user=get_default_test_user)
+
+    producto1, producto2, producto3 = crear_productos
+
+    orden = crear_orden
+
+    data_orden = {
+        'fecha_hora': orden.fecha_hora
+    }
+
+    data_detalle1 = {
+        "orden": orden.id,
+        "cantidad": 5,
+        "precio_unitario": producto1.precio,
+        "producto": producto1.id,
+    }
+
+    data_detalle2 = {
+        "orden": orden.id,
+        "cantidad": 3,
+        "precio_unitario": producto3.precio,
+        "producto": producto3.id,
+    }
+
+    response_orden = client.post(f'/api/v1/orden/', data=data_orden)
+    response_detalle1 = client.post(f'/api/v1/detalle_orden/', data=data_detalle1)
+    response_detalle2 = client.post(f'/api/v1/detalle_orden/', data=data_detalle2)
+
+
+    # Verificar el stock antes de eliminar la orden con sus detalles
+    producto1.refresh_from_db()
+    producto3.refresh_from_db()
+
+    assert producto1.stock == 45
+    assert producto3.stock == 17
+
+    response = client.delete(f'/api/v1/orden/{orden.uuid}/')
+    assert response.status_code == codigo_http
+
+    #Verificar el stock despues de eliminar la orden con sus detalles
+    producto1.refresh_from_db()
+    producto3.refresh_from_db()
+
+    assert producto1.stock == 50
+    assert producto3.stock == 20
+
+
+    # Verificar que la orden y sus detalles se hayan eliminado de la base de datos
+    assert Orden.objects.filter(uuid=orden.uuid).exists() == False
+
+    assert DetalleOrden.objects.filter(orden=orden).exists() == False
 
 
 

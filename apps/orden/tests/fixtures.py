@@ -53,6 +53,22 @@ def crear_detalles_orden(crear_productos, crear_orden):
 
     return detalle_orden1, detalle_orden2
 
+@pytest.fixture
+def crear_ordenes_con_detalles(crear_productos):
+
+    orden1 = crear_orden_con_parametros(datetime.strptime('2023-06-12', '%Y-%m-%d'))
+
+    orden2 = crear_orden_con_parametros(datetime.strptime('2020-09-20', '%Y-%m-%d'))
+
+    producto1, producto2, producto3 = crear_productos
+
+    detalle_orden1 = crear_detalle_orden_con_parametros(orden1, 10, producto1.precio, producto1)
+
+    detalle_orden2 = crear_detalle_orden_con_parametros(orden1, 5, producto3.precio, producto3)
+
+    detalle_orden3 = crear_detalle_orden_con_parametros(orden2, 3, producto2.precio, producto2)
+
+    return detalle_orden1, detalle_orden2, detalle_orden3, orden1, orden2, producto1, producto3
 
 @pytest.fixture
 def crear_detalle_orden(crear_productos, crear_orden):
