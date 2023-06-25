@@ -5,26 +5,23 @@ from apps.producto.tests.fixtures import crear_producto
 
 
 #Inciso 6 (verificar que al ejecutar el endpoint de modificación del stock de un producto, actualiza correctamente dicho stock)
-@pytest.mark.parametrize(
-    'stock, codigo_http, loguear_usuario',
-    [(15, 200, True)]
-)
 @pytest.mark.django_db
-def test_api_actualizar_stock_producto(api_client, get_default_test_user, crear_producto,
-                                       stock, codigo_http, loguear_usuario):
+def test_api_actualizar_stock_producto(api_client, get_default_test_user, crear_producto):
 
     client = api_client
-    if loguear_usuario:
-        client.force_authenticate(user=get_default_test_user)
+    client.force_authenticate(user=get_default_test_user)
 
     producto = crear_producto
-    nuevo_stock = stock
+    nuevo_stock = 15
+
+    # El stock del producto antes del cambio, es igual a 50
+    assert producto.stock == 50
 
     response = client.put(f'/api/v1/producto/{producto.uuid}/stock/', {'stock': nuevo_stock})
 
-    assert response.status_code == codigo_http
+    assert response.status_code == 200
 
     #Realiza una consulta a la base de datos para obtener los valores más recientes de los campos del objeto y los actualiza en el objeto en memoria.
     producto.refresh_from_db()
-
+    # Nuevo stock tiene que ser igual a 15
     assert producto.stock == nuevo_stock
