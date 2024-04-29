@@ -25,3 +25,58 @@ def test_api_actualizar_stock_producto(api_client, get_default_test_user, crear_
     producto.refresh_from_db()
     # Nuevo stock tiene que ser igual a 15
     assert producto.stock == nuevo_stock
+
+
+#Test unitario para verificar que se creo el producto correctamente
+@pytest.mark.django_db
+def test_crear_producto():
+
+    producto = Producto(nombre="Cuaderno", precio=100, stock=50)
+
+    assert producto is not None
+    assert producto.nombre == "Cuaderno"
+    assert producto.precio == 100
+    assert producto.stock == 50
+
+
+#Test unitario para verificar que se suma el stock del producto
+@pytest.mark.django_db
+def test_sumar_stock_producto():
+
+    producto = Producto(nombre="Cuaderno", precio=100, stock=50)
+
+    nuevo_stock = 15
+
+    producto.sumar_stock(nuevo_stock)
+
+    # Verificamos que el stock del producto se haya actualizado correctamente
+    assert producto.stock == 65
+
+
+#Test unitario para verificar que se resta el stock del producto
+@pytest.mark.django_db
+def test_restar_stock_producto():
+
+    producto = Producto(nombre="Cuaderno", precio=100, stock=50)
+
+    nuevo_stock = 15
+
+    producto.restar_stock(nuevo_stock)
+
+    # Verificamos que el stock del producto se haya actualizado correctamente
+    assert producto.stock == 35
+
+
+#Test unitario para verificar que se actualice el stock del producto
+@pytest.mark.django_db
+def test_actualizar_stock_producto():
+
+    producto = Producto(nombre="Cuaderno", precio=100, stock=50)
+
+    nuevo_stock = 70
+
+    producto.reestablecer_stock(nuevo_stock)
+
+    # Verificamos que el stock del producto se haya actualizado correctamente
+    assert producto.stock == 70
+

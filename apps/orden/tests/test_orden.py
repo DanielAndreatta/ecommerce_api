@@ -5,6 +5,7 @@ from apps.orden.models import DetalleOrden, Orden
 from apps.core.tests.fixtures import api_client, get_default_test_user
 from apps.orden.tests.fixtures import crear_orden, crear_ordenes, crear_detalle_orden, crear_detalles_orden, crear_ordenes_con_detalles
 from apps.producto.tests.fixtures import crear_producto, crear_productos
+from datetime import datetime
 
 
 
@@ -197,5 +198,34 @@ def test_api_get_total_detalle(crear_detalle_orden):
     total_esperado = 300 * 2
     total = crear_detalle_orden.get_total_detalle()
     assert total == total_esperado
+
+
+# Test unitario para verificar que se crea una orden correctamente
+@pytest.mark.django_db
+def test_crear_orden():
+    fecha_hora = datetime.strptime('2024-04-27T00:00:00Z', '%Y-%m-%dT%H:%M:%SZ')
+
+    orden = Orden(fecha_hora=fecha_hora)
+
+    assert orden is not None
+    assert orden.fecha_hora == fecha_hora
+
+
+# Test unitario para verificar que se crea un detalle_orden correctamente
+@pytest.mark.django_db
+def test_crear_detalle_orden():
+
+    producto = Producto(nombre="Cuaderno", precio=4000, stock=100)
+
+    fecha_hora = datetime.strptime('2024-04-27T00:00:00Z', '%Y-%m-%dT%H:%M:%SZ')
+    orden = Orden(fecha_hora=fecha_hora)
+
+    detalle_orden = DetalleOrden(orden=orden, cantidad=5, precio_unitario=producto.precio, producto=producto)
+
+    assert detalle_orden is not None
+    assert detalle_orden.orden == orden
+    assert detalle_orden.cantidad == 5
+    assert detalle_orden.precio_unitario == producto.precio
+    assert detalle_orden.producto == producto
 
 

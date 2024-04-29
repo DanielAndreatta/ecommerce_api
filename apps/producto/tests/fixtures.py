@@ -11,6 +11,7 @@ def crear_producto_con_parametros(nombre, precio, stock):
     return producto
 
 
+
 @pytest.fixture
 def crear_producto():
 
