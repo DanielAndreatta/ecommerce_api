@@ -19,7 +19,7 @@ COPY . /opt/app
 WORKDIR /opt/app
 
 # Instala las dependencias de Python
-RUN pip install -r requirements.txt
+RUN pip install -r /ecommerce_api/requirements.txt
 
 # Cambia los permisos de los archivos de la aplicación
 RUN chown -R www-data:www-data /opt/app
