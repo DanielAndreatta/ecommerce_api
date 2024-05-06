@@ -1,5 +1,5 @@
-# Usa la imagen base de Python 3.9
-FROM python:3.8
+# Usa la imagen base de Python 3.8
+FROM python:3.10
 
 # Instala nginx y otras dependencias
 RUN apt-get update && apt-get install nginx vim -y --no-install-recommends
@@ -19,13 +19,13 @@ COPY . /opt/app
 WORKDIR /opt/app
 
 # Instala las dependencias de Python
-RUN pip install -r ecommerce_api/requirements.txt
+RUN pip install -r requirements.txt
 
 # Cambia los permisos de los archivos de la aplicación
 RUN chown -R www-data:www-data /opt/app
 
-# Expone el puerto 8020 para que sea accesible desde fuera del contenedor
-EXPOSE 8020
+# Expone el puerto 80 para que sea accesible desde fuera del contenedor
+EXPOSE 80
 
 # Inicia el servidor usando el script start-server.sh
-CMD ["/opt/app/scripts/start-server.sh"]
+CMD ["/opt/app/start-server.sh"]
