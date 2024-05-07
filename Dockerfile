@@ -30,6 +30,13 @@ RUN pip install -r requirements.txt --cache-dir /opt/app/pip_cache
 # Cambia los permisos de los archivos de la aplicación
 RUN chown -R www-data:www-data /opt/app
 
+# Ejecutar las migraciones de Django
+#RUN python ecommerce_api/manage.py makemigrations --no-input
+#RUN python ecommerce_api/manage.py migrate
+
+# Recolectar los archivos estaticos de Django
+#RUN python ecommerce_api/manage.py collectstatic
+
 # Expone el puerto 80 para que sea accesible desde fuera del contenedor
 EXPOSE 80
 STOPSIGNAL SIGTERM
