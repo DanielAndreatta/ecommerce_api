@@ -2,7 +2,7 @@
 
 python ecommerce_api/manage.py makemigrations --no-input
 python ecommerce_api/manage.py migrate
-python ecommerce_api/manage.py collectstatic
+python ecommerce_api/manage.py collectstatic --no-input
 
 # Crea el superusuario si se especifica
 if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ] ; then

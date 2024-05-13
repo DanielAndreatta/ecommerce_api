@@ -18,8 +18,6 @@ RUN mkdir -p /opt/app/ecommerce_api
 COPY requirements.txt start-server.sh /opt/app/
 COPY .pip_cache /opt/app/pip_cache/
 COPY . /opt/app/ecommerce_api/
-#COPY ecommerce_api /opt/app/ecommerce_api/
-
 
 # Establece el directorio de trabajo
 WORKDIR /opt/app
@@ -30,15 +28,8 @@ RUN pip install -r requirements.txt --cache-dir /opt/app/pip_cache
 # Cambia los permisos de los archivos de la aplicación
 RUN chown -R www-data:www-data /opt/app
 
-# Ejecutar las migraciones de Django
-#RUN python ecommerce_api/manage.py makemigrations --no-input
-#RUN python ecommerce_api/manage.py migrate
-
-# Recolectar los archivos estaticos de Django
-#RUN python ecommerce_api/manage.py collectstatic
-
 # Expone el puerto 80 para que sea accesible desde fuera del contenedor
-EXPOSE 80
+EXPOSE 8020
 STOPSIGNAL SIGTERM
 
 # Inicia el servidor usando el script start-server.sh
