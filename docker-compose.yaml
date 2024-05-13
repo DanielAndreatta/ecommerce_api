@@ -1,10 +1,12 @@
 version: "3"
 
 services:
-  db_postgres:
-    image: postgres:12
-    volumes:
-      - postgres_data:/var/lib/postgresql/postgres_data
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 
   django_app:
     build: .
@@ -12,10 +14,10 @@ services:
       - static:/code/static
       - .:/code
     depends_on:
-      - db_postgres
+      - db
 
   nginx:
-    image: nginx:1.13
+    image: nginx
     ports:
       - 8000:80
     volumes:
