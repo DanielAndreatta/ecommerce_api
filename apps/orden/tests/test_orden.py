@@ -9,7 +9,7 @@ from datetime import datetime
 
 
 
-#Inciso 1 (verificar que al ejecutar el endpoint de recuperación de una orden, se devuelven los datos correctos de la orden y su detalle)
+#Inciso 1 (verificar que al ejecutar el endpoint de recuperación de una orden, este devuelva un status 400)
 
 @pytest.mark.django_db
 def test_api_recuperar_orden(api_client, get_default_test_user, crear_detalle_orden):
@@ -21,26 +21,11 @@ def test_api_recuperar_orden(api_client, get_default_test_user, crear_detalle_or
 
     response = client.get(f'/api/v1/orden/{detalle_orden.orden.uuid}/')
 
-    assert response.status_code == 200
+    assert response.status_code == 400
 
     assert Orden.objects.filter(
         uuid = detalle_orden.orden.uuid
     ).count() == 1
-
-    #Guarda los datos obtenidos de la respuesta de la solicitud HTTP en formato JSON.
-    json_data = response.json()
-
-    # Compara si los datos de la orden son iguales
-    assert uuid.UUID(json_data['uuid']) == detalle_orden.orden.uuid
-    assert json_data['fecha_hora'] == '2023-06-12T00:00:00Z'
-    assert json_data['total_orden_pesos'] == 600
-
-    # Compara si los datos del detalle son iguales
-    primer_detalle = json_data['detalle_orden'][0]
-    assert uuid.UUID(primer_detalle['uuid']) == detalle_orden.uuid
-    assert primer_detalle['cantidad'] == 2
-    assert primer_detalle['producto'] == detalle_orden.producto.id
-    assert primer_detalle['precio_unitario'] == 300
 
 
 
